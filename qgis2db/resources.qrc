@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/plugins/qgis2db" >
+        <file>export.png</file>
+    </qresource>
+    <qresource prefix="/plugins/qgis2db" >
+        <file>help_CCCC00.png</file>
+    </qresource>
+    <qresource prefix="/plugins/qgis2db" >
+        <file>VERTICAL_SOLUTIONS.png</file>
+    </qresource>
+    <qresource prefix="/plugins/qgis2db" >
+        <file>metadata.txt</file>
+    </qresource>
+</RCC>

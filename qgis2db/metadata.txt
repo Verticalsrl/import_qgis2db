@@ -1,0 +1,49 @@
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=qgis2db
+qgisMinimumVersion=3.8
+qgisMaximumVersion=3.99
+description=Import shapefile layers from QGis project to PostgreSQL DB
+version=0.1
+author=A.R.Gaeta
+email=ar_gaeta@yahoo.it
+release_date=2020/05/06
+
+about=import dei layer in formato shapefile da un progetto Qgis direttamente in un DB PostgreSQL
+
+tracker=github.com
+repository=github.com
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+changelog=
+    2020/05/06 0.1 prima versione. 
+    
+
+
+# Tags are comma separated with spaces allowed
+tags=import, shapefile, db, postgresql, project, database
+
+homepage=
+category=Plugins
+icon=icon.png
+# experimental flag
+experimental=True
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+#Per rimappare le immagini editare in modo adeguato il file "resources.qrc" e poi lanciare da shell:
+#  pyrcc4 -o resources.py resources.qrc
+# ATTENZIONE!! Per QGis 3.x DEVE ESSERE RCIREATO QUESTO FILE:
+#  pyrcc5 -o resources.py resources.qrc
+
