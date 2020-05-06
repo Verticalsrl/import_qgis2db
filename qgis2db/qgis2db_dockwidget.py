@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- qgis2db
+ qgis2dbDockWidget
                                  A QGIS plugin
- Import shapefile layers from QGis project to PostgreSQL DB
+Import shapefile layers from QGis project to PostgreSQL DB
                              -------------------
         begin                : 2020/05/06
+        git sha              : $Format:%H$
         copyright            : (C) 2020 by A.R.Gaeta/Vertical Srl
         email                : ar_gaeta@yahoo.it
-        git sha              : $Format:%H$
  ***************************************************************************/
 
 /***************************************************************************
@@ -19,17 +19,24 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- This script initializes the plugin, making it known to QGIS.
 """
 
+import os
 
-# noinspection PyPep8Naming
-def classFactory(iface):  # pylint: disable=invalid-name
-    """Load qgis2db class from file qgis2db.
+#from PyQt4 import QtGui, uic
+from qgis.PyQt import QtGui, uic
 
-    :param iface: A QGIS interface instance.
-    :type iface: QgsInterface
-    """
-    #
-    from .qgis2db import qgis2db
-    return qgis2db(iface)
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'qgis2db__dockwidget_base.ui'))
+
+
+class qgis2dbDockWidget(QtGui.QDialog, FORM_CLASS):
+    def __init__(self, parent=None):
+        """Constructor."""
+        super(qgis2dbDockWidget, self).__init__(parent)
+        # Set up the user interface from Designer.
+        # After setupUI you can access any designer object by doing
+        # self.<objectname>, and you can use autoconnect slots - see
+        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
+        # #widgets-and-dialogs-with-auto-connect
+        self.setupUi(self)

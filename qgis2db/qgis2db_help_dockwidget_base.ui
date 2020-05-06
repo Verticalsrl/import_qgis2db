@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ProgettoPNIDockWidgetBase</class>
- <widget class="QDialog" name="ProgettoPNIDockWidgetBase">
+ <class>qgis2dbDockWidgetBase</class>
+ <widget class="QDialog" name="qgis2dbDockWidgetBase">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ProgettoPNI</string>
+   <string>qgis2db</string>
   </property>
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
@@ -53,7 +53,7 @@
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>:/plugins/ProgettoPNI/VERTICAL_SOLUTIONS.png</pixmap>
+    <pixmap>:/plugins/qgis2db/VERTICAL_SOLUTIONS.png</pixmap>
    </property>
    <property name="scaledContents">
     <bool>true</bool>
@@ -122,7 +122,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>accepted()</signal>
-   <receiver>ProgettoPNIDockWidgetBase</receiver>
+   <receiver>qgis2dbDockWidgetBase</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -138,7 +138,7 @@
   <connection>
    <sender>button_box</sender>
    <signal>rejected()</signal>
-   <receiver>ProgettoPNIDockWidgetBase</receiver>
+   <receiver>qgis2dbDockWidgetBase</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

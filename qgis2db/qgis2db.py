@@ -91,8 +91,8 @@ from qgis.gui import *
 # Initialize Qt resources from file resources.py
 from . import resources
 # Import the code for the dialog
-from .qgis2db_config_dockwidget import ProgettoPNIConfigDockWidget
-from .qgis2db_help_dockwidget import ProgettoPNIHelpDockWidget
+from .qgis2db_config_dockwidget import qgis2dbConfigDockWidget
+from .qgis2db_help_dockwidget import qgis2dbHelpDockWidget
 
 
 #Importo i miei script dedicati e altre cose utili per il catasto:
@@ -248,7 +248,7 @@ class qgis2db:
         locale_path = os.path.join(
             self.plugin_dir,
             'i18n',
-            'ProgettoPNI_{}.qm'.format(locale))
+            'qgis2db_{}.qm'.format(locale))
 
         if os.path.exists(locale_path):
             self.translator = QTranslator()
@@ -258,13 +258,13 @@ class qgis2db:
                 QCoreApplication.installTranslator(self.translator)
 
         # Create the dialog (after translation) and keep reference
-        self.dlg_config = ProgettoPNIConfigDockWidget()
-        self.dlg_help = ProgettoPNIHelpDockWidget()
-        #self.dlg_compare = ProgettoPNICompareDockWidget()
-        #self.dlg_solid = ProgettoPNISolidDockWidget()
-        #self.dlg_export = ProgettoPNIExportDockWidget()
-        #self.dlg_cloneschema = ProgettoPNICloneschemaDockWidget()
-        #self.dlg_append = ProgettoPNIAppendDockWidget()
+        self.dlg_config = qgis2dbConfigDockWidget()
+        self.dlg_help = qgis2dbHelpDockWidget()
+        #self.dlg_compare = qgis2dbCompareDockWidget()
+        #self.dlg_solid = qgis2dbSolidDockWidget()
+        #self.dlg_export = qgis2dbExportDockWidget()
+        #self.dlg_cloneschema = qgis2dbCloneschemaDockWidget()
+        #self.dlg_append = qgis2dbAppendDockWidget()
 
         # Declare instance attributes
         self.actions = []
@@ -278,7 +278,7 @@ class qgis2db:
         
         #Implemento alcune azioni sui miei pulsanti
         #Scelgo che punto voglio associare e faccio partire in qualche modo il controllo sulla selezione sulla mappa:
-        '''self.dlg = ProgettoPNIDockWidget()
+        '''self.dlg = qgis2dbDockWidget()
         self.dlg.scala_giunto_btn.clicked.connect(self.associa_scala_giunto)
         self.dlg.scala_pd_btn.clicked.connect(self.associa_scala_pd)
         self.dlg.scala_pfs_btn.clicked.connect(self.associa_scala_pfs)
@@ -1984,7 +1984,7 @@ class qgis2db:
         #load the form
         path = os.path.dirname(os.path.abspath(__file__))
         self.dock = uic.loadUi(os.path.join(path, "qgis2db_dockwidget_base.ui")) #OK
-        self.dock_compare = uic.loadUi(os.path.join(path, "qgis2db_compare_dockwidget_base.ui"))
+        #self.dock_compare = uic.loadUi(os.path.join(path, "qgis2db_compare_dockwidget_base.ui"))
         
         #se modifico il drop down faccio partire un'azione:
         #QObject.connect(self.dlg_compare.comboBoxFromPoint, SIGNAL("currentIndexChanged(const QString&)"), self.updateFromSelection_compare)

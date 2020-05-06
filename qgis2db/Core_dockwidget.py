@@ -3,11 +3,11 @@
 /***************************************************************************
  CoreDockWidget
                                  A QGIS plugin
-Procedura gestione rete ENEL
+Import shapefile layers from QGis project to PostgreSQL DB
                              -------------------
-        begin                : 2016-09-26
+        begin                : 2020/05/06
         git sha              : $Format:%H$
-        copyright            : (C) 2016 by A.R.Gaeta/Vertical Srl
+        copyright            : (C) 2020 by A.R.Gaeta/Vertical Srl
         email                : ar_gaeta@yahoo.it
  ***************************************************************************/
 

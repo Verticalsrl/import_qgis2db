@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
- ProgettoPNIConfigDockWidget
+ qgis2dbConfigDockWidget
                                  A QGIS plugin
-Procedura gestione rete ProgettoPNI
+Import shapefile layers from QGis project to PostgreSQL DB
                              -------------------
-        begin                : 2019-01-01
+        begin                : 2020/05/06
         git sha              : $Format:%H$
-        copyright            : (C) 2019 by A.R.Gaeta/Vertical Srl
+        copyright            : (C) 2020 by A.R.Gaeta/Vertical Srl
         email                : ar_gaeta@yahoo.it
  ***************************************************************************/
 
@@ -44,14 +44,14 @@ from qgis.PyQt import uic
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'progetto_pni_config_dockwidget_base.ui'))
+    os.path.dirname(__file__), 'qgis2db_config_dockwidget_base.ui'))
 
 
-#class ProgettoPNIConfigDockWidget(QtGui.QDialog, FORM_CLASS):
-class ProgettoPNIConfigDockWidget(qgs_dialog, FORM_CLASS):
+#class qgis2dbConfigDockWidget(QtGui.QDialog, FORM_CLASS):
+class qgis2dbConfigDockWidget(qgs_dialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
-        super(ProgettoPNIConfigDockWidget, self).__init__(parent)
+        super(qgis2dbConfigDockWidget, self).__init__(parent)
         # Set up the user interface from Designer.
         # After setupUI you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
