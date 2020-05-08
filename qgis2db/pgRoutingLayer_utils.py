@@ -51,7 +51,7 @@ if (int(qgis_version[0]) < 3):
 else:
     qgs_level = Qgis.Info
 def logMessage(message, level=qgs_level):
-    QgsMessageLog.logMessage(message, 'progetto PNI', level)
+    QgsMessageLog.logMessage(message, 'qgis2db logs', level)
 
 
 import psycopg2
