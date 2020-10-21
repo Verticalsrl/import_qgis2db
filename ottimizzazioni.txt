@@ -1,0 +1,30 @@
+
+
+*****
+nell'import:
+--> la barra % di avanzamento non mostra nulla se non alla fine. Magari indicare anche il nome del file che sta elaborando
+
+
+*****
+--> "2020-10-21T10:55:09     WARNING    Failed to transform a feature with ID '18' to single part. Writing stopped."
+Questo succede perchè a quanto pare l'opzione "forceSinglePartGeometryType" è fasulla.
+Inoltre pare che QGis carichi tutti gli shp come multipart, anche se non lo sono.
+Quindi il vero problema si incontra quando il layer è VERAMENTE multipart, in questo caso il caircatore restituisce errore perchè QgsVectorLayerExporter non è in grado di convertire questo vero multipart layer in singlepart.
+Vedere:
+https://github.com/qgis/QGIS/pull/32108
+https://github.com/qgis/QGIS/issues/32089
+
+A questo punto non saprei cosa fare... Ha senso convertire in single part spezzando dunque delle linee o dei poligoni??? Cioè si vuole veramente questo??
+
+Se si commenta l'opzione "options['forceSinglePartGeometryType'] = True" il caricamento avviene senza errori, e PostGIS crea giustamente delle tabelle con geometria MultiLineString
+
+
+*****
+--> inserire anche come layer da escludere quelli già su un DB, e restituire in un mesaggio questi layer che sono stati esclusi dall'import
+
+
+*****
+--> salvare il progetto QGis con gli stili su DB?
+Mi pare di aver già guardato e visto che non era possibile...
+
+

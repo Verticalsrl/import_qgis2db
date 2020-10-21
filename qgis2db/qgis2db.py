@@ -29,8 +29,6 @@ NUOVE NOTE plugin qgis2db:
 - a list of provider keys can be obtained by:
 QgsProviderRegistry.instance().providerList()
 
-
-
 - alcuni shp in caricamento possono gia' avere il campo gid, ma non e' univoco, e la procedura di caricamento su DB da errore. Non sono riuscito a omettere questo campo nel caso esista, ma solo ad eliminarlo, anche se ha un comportamento strano. Dunque carico gli shp su DB usando come PK il campo gidd, sperando che cosi scritto non esista gia sugli shp. Funzione import_shp2db
 
 - esegui vacuum dello schema dopo l'import da shp2db, funzione import_shp2db, oppure guarda anche il python ImportIntoPostGIS recuperato da web, che sfrutta la libreria di cui non ho ancora trovato documentazione pero:
@@ -41,13 +39,6 @@ QgsProviderRegistry.instance().providerList()
 
 OTTIMIZZAZIONI/DUBBI:
 - ATTENZIONE!! nel cambio di datasource del progetto template devo omettere quei layer che non trovano esatto riscontro nel nome sul DB altrimenti QGis crasha. Vedi funzione import_shp2db
-- creare maschere di editing sui progetti template con le dovute constraints sui campi (mappa valori) in modo tale da riportarle poi sui progetti salvati con i dati da DB
-- creare maschere di editing con vari TAB per semplificare la compilazione/modifica dei campi, in base a quelli piu' frequentemente modificati dall'operatore in cantiere
-
-- join tra ebw_pte e ebw_location per progetti C&D???? Su quale campo? Chiedere a SINERGICA/GATTI
-RISPOSTA: sui campi nome, solo che su ebw_location il campo e' costituito da 2 parti. quindi con una formula QGis ad esempio posso creare un campo virtuale "nome_pte" su ebw_location:
-right( "nome", ( length( trim( "nome" ) ) -  strpos( "nome", ' ') ))
-e su di esso fare un join su ebw_pte (ammesso che esista, ma se non esiste non mi pare che QGis dia problemi) mostrando il campo "numero_porte". In base ad esso, visualizzare in maniera differente i ROE cioè i PTA di ebw_lcoation (colore? forma?)
 
 - SPATIAL INDEX: nel caso volessi aggiungere a posteriori indice spaziale su vecchi schemi, da consolle python di qgis:
 dest_dir = "dbname=pni_2 host=86.107.96.34 port=5432 user=operatore password=operatore_2k16"
