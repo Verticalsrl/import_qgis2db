@@ -119,7 +119,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>10.127.138.43</string>
+    <string>86.107.96.34</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
@@ -226,7 +226,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>test_pni</string>
+    <string>tim</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_10">
@@ -324,7 +324,7 @@ p, li { white-space: pre-wrap; }
     </rect>
    </property>
    <property name="text">
-    <string>5433</string>
+    <string>5432</string>
    </property>
   </widget>
   <widget class="QProgressBar" name="import_progressBar">

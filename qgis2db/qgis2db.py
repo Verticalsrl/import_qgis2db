@@ -55,6 +55,15 @@ for row in dataDB:
 test_conn.commit()
 
 
+- evita di caricare su DB tiff e WMS e layer che già sono su DB. come? Forse c'è un euivalente getDatasource di questo:
+layer_imported.setDataSource(new_uri, layer_imported.name(), 'postgres')
+
+- salvare il nuovo progetto su DB? are fattibile. Vedi:
+https://gis.stackexchange.com/questions/320934/save-qgis-project-to-postgresql-postgis-database-using-pyqgis
+https://gis.stackexchange.com/questions/354593/load-qgis-project-from-database-using-pyqgis
+https://docs.qgis.org/3.4/pdf/en/QGIS-3.4-PyQGISDeveloperCookbook-en.pdf
+(cerca qui capitolo 2)
+
 - RIPULISCI questo codice dalle vecchie funzioni e vecchi richiami ad altri script, che dovrai eliminare dal plugin in modo che sia un po' piu' pulito
 
 '''
@@ -416,7 +425,7 @@ class qgis2db:
             options = {}
             options['lowercaseFieldNames'] = True
             options['overwrite'] = True
-            options['forceSinglePartGeometryType'] = True
+            #options['forceSinglePartGeometryType'] = True
             try:
                 self.dlg_config.txtFeedback_import.setText("Sto importando i dati...")
                 for layer_loaded in lista_layer_to_load.values():
@@ -426,6 +435,16 @@ class qgis2db:
                     uri = None
                     uri = "%s key=gidd table=\"%s\".\"%s\" (geom) sql=" % (dest_dir, schemaDB, layer_loaded.name().lower())
                     Utils.logMessage('WKB: ' + str(layer_loaded_geom) + '; DEST_DIR: ' + str(dest_dir))
+                    layer_source = layer_loaded.source()
+                    #Utils.logMessage('SOURCE: ' + str(layer_source))
+                    if ('memory' in layer_source):
+                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto di tipo virtuale')
+                        continue
+                    if ('dbname' in layer_source):
+                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto la sorgente e un DB')
+                        continue
+                    if (1==1):
+                      continue
                     crs = layer_loaded.crs()
                     if (int(qgis_version[0]) >= 3):
                         error = QgsVectorLayerExporter.exportLayer(layer_loaded, uri, "postgres", crs, False, options=options)
