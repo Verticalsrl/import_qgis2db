@@ -419,6 +419,7 @@ class qgis2db:
                 
             #Li spengo di default e li importo direttamente sul DB:
             shp_name_to_load = []
+            shp_imported_on_db = []
             self.dlg_config.import_progressBar.setMaximum( len(lista_layer_to_load) )
             crs = None
             test_conn = None
@@ -430,7 +431,6 @@ class qgis2db:
                 self.dlg_config.txtFeedback_import.setText("Sto importando i dati...")
                 for layer_loaded in lista_layer_to_load.values():
                     #self.iface.legendInterface().setLayerVisible(layer_loaded, False) #tralascio in QGis3
-                    shp_name_to_load.append(layer_loaded.name().lower())
                     layer_loaded_geom = layer_loaded.wkbType()
                     uri = None
                     uri = "%s key=gidd table=\"%s\".\"%s\" (geom) sql=" % (dest_dir, schemaDB, layer_loaded.name().lower())
@@ -438,13 +438,18 @@ class qgis2db:
                     layer_source = layer_loaded.source()
                     #Utils.logMessage('SOURCE: ' + str(layer_source))
                     if ('memory' in layer_source):
-                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto di tipo virtuale')
+                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto di tipo virtuale', Qgis.Warning)
                         continue
                     if ('dbname' in layer_source):
-                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto la sorgente e un DB')
+                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto la sorgente e un DB', Qgis.Warning)
                         continue
-                    if (1==1):
-                      continue
+                    if ('.shp' not in layer_source):
+                        Utils.logMessage('layer ' + layer_loaded.name() + ' non importato sul DB in quanto la sorgente non ha estensione .shp', Qgis.Warning)
+                        continue
+                    #if (1==1):
+                    #    continue
+                    shp_name_to_load.append(layer_loaded.name().lower())
+                    shp_imported_on_db.append(layer_loaded)
                     crs = layer_loaded.crs()
                     if (int(qgis_version[0]) >= 3):
                         error = QgsVectorLayerExporter.exportLayer(layer_loaded, uri, "postgres", crs, False, options=options)
@@ -469,14 +474,20 @@ class qgis2db:
                         self.dlg_config.txtFeedback_import.setText(error[1])
                         return 0
                         
-                    #salvo anche los tile sul DB
+                    shp_imported_on_db.append(layer_loaded)
+                    #riporto questo layer sul DB cambiando la sorgente nel progetto
+                    layer_loaded.setDataSource(uri, layer_loaded.name(), "postgres")
+                    
+                    #salvo anche lo stile sul DB
                     #ATTENZIONE! forse lo stile viene salvato su DB se proviene da un layer caricato da DB
-                    #dunque provare a salvare lo stile dello shp in una variabile python, ricaricare il progetto con i layer presi da DB, riassegnare a ciascuno di questio nuovi layer lo stile dello shp di origine, infine provare a lancaire questo saveStyleToDatabase....
+                    #dunque provare a salvare lo stile dello shp in una variabile python, ricaricare il progetto con i layer presi da DB, riassegnare a ciascuno di questi nuovi layer lo stile dello shp di origine, infine provare a lanciare questo saveStyleToDatabase....
                     layer_style_name = "%s_style" % (layer_loaded.name().lower())
                     layer_style_description = "stile per il layer %s" % (layer_loaded.name().lower())
                     layer_loaded.saveStyleToDatabase(layer_style_name, layer_style_description, True, "uiFileContent" )
 
                     self.pageProcessed(self.dlg_config.import_progressBar) #increase progressbar
+                
+                self.pageProcessed(self.dlg_config.import_progressBar) #increase progressbar - per portarlo al 100%
                 
                 #apro il cursore per leggere/scrivere sul DB:
                 test_conn = psycopg2.connect(dest_dir)
@@ -496,7 +507,7 @@ class qgis2db:
                 #SPATIAL INDEX
                 #creo lo SPATIAL INDEX sugli shp appena caricati
                 for shp_geoidx in shp_name_to_load:
-                    query_spatial = "CREATE INDEX ON %s.%s USING gist (geom);" % (schemaDB, shp_geoidx)
+                    query_spatial = "CREATE INDEX ON %s.\"%s\" USING gist (geom);" % (schemaDB, shp_geoidx)
                     cur.execute(query_spatial)
                     #il VACUUM sarebbe bene metterlo sulla macchina a crontab come operazione giornaliera
                     #query_vacuum = "VACUUM FULL ANALYZE %s.%s" % (schemaDB, row[0])
@@ -505,14 +516,22 @@ class qgis2db:
                 
                 #TRACKING modifiche sui layer
                 #devo attivare gli script in base ai layer effettivamente caricati
-                Utils.logMessage('shp_name_to_load, per i quali ho anche creato indice spaziale '+str(shp_name_to_load))
-                query_path = "SET search_path = %s, pg_catalog;" % (schemaDB)
-                Utils.logMessage('Adesso se il caso creo il tracking sulle tabelle nello schema ' + str(schemaDB))
-                cur.execute(query_path)
+                #Utils.logMessage('shp_name_to_load, per i quali ho anche creato indice spaziale '+str(shp_name_to_load))
+                #query_path = "SET search_path = %s, pg_catalog;" % (schemaDB)
+                #Utils.logMessage('Adesso se il caso creo il tracking sulle tabelle nello schema ' + str(schemaDB))
+                #cur.execute(query_path)
                 
                 self.dlg_config.txtFeedback_import.setText("Dati importati con successo! Passiamo alla creazione del progetto...")
                 #a questo punto dovrei importare il progetto template in base al tipo di dati importati
                 project = QgsProject.instance()
+                #creo l'uri che serve per salvare il rogetto su DB
+                #una parte e' gia stata definita: uri_for_project_on_DB = 'postgresql://userDB:pwdDB@hostDB:portDB?dbname=nameDB'
+                #mancano schema e nome del progetto:
+                Utils.logMessage( str(uri_for_project_on_DB) )
+                uri_for_project_on_DB_complete = uri_for_project_on_DB+'&schema='+schemaDB+'&project='+schemaDB
+                #uri = 'postgresql://user:pass@localhost:5432?dbname=my_db&schema=my_schema&project=my_project'
+                QgsProject.instance().write(uri_for_project_on_DB_complete)
+                
                 #dovrei ricaricare i layer prendendoli dal DB
                 #ora modifico i dataSource di questi progetti puntandoli allo schema appena creato:
                 #ATTENZIONE!!! Se non dovesse esserci una tabella corrispondente su postgres QGis crasha direttamente e anche con try/except non si riesce a intercettare questo errore!!
@@ -544,7 +563,7 @@ class qgis2db:
                 test_conn.rollback()
                 return 0
             else:
-                self.dlg_config.txtFeedback_import.setText("Dati importati con successo sul DB")
+                self.dlg_config.txtFeedback_import.setText("Dati importati con successo sul DB e progetto creato")
                 #Abilito le restanti sezioni e pulsanti
                 #self.dlg_config.chkDB.setEnabled(False)
                 #self.dlg_config.import_DB.setEnabled(False)
@@ -639,6 +658,8 @@ class qgis2db:
         nameDB = self.dlg_config.nameDB.text()
         global dest_dir
         dest_dir = "dbname=%s host=%s port=%s user=%s password=%s" % (nameDB, hostDB, portDB, userDB, pwdDB)
+        global uri_for_project_on_DB
+        uri_for_project_on_DB = 'postgresql://'+userDB+':'+pwdDB+'@'+hostDB+':'+portDB+'?dbname='+nameDB
         #open DB with psycopg2
         global test_conn, cur
         test_conn = None
@@ -869,14 +890,14 @@ class qgis2db:
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
         #TEST: carico solo un primo pannello di prova da mostrare ad ANDREA:
-        icon_path = ':/plugins/qgis2db/download_CCCC00.png'
+        icon_path = ':/plugins/qgis2db/import-7b1277.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Importa i dati da SHP sul DB e inizializza il nuovo progetto QGis'),
             callback=self.run_config,
             parent=self.iface.mainWindow())
         
-        icon_path = ':/plugins/qgis2db/help_CCCC00.png'
+        icon_path = ':/plugins/qgis2db/help-7b1277.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Informazioni'),

@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/plugins/qgis2db" >
-        <file>export.png</file>
+        <file>import-7b1277.png</file>
     </qresource>
     <qresource prefix="/plugins/qgis2db" >
-        <file>help_CCCC00.png</file>
+        <file>help-7b1277.png</file>
     </qresource>
     <qresource prefix="/plugins/qgis2db" >
         <file>VERTICAL_SOLUTIONS.png</file>
