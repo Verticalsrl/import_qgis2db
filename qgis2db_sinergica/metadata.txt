@@ -7,14 +7,14 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=qgis2db
+name=qgis2db_sinergica
 qgisMinimumVersion=3.8
 qgisMaximumVersion=3.99
 description=Import shapefile layers from QGis project to PostgreSQL DB
 version=0.3
 author=A.R.Gaeta
 email=ar_gaeta@yahoo.it
-release_date=2020/10/23
+release_date=2020/11/11
 
 about=import dei layer in formato shapefile da un progetto Qgis direttamente in un DB PostgreSQL
 
